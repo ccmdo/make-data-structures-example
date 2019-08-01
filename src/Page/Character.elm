@@ -1,5 +1,6 @@
-module Page.Character exposing (Model, Msg, init, update, view)
+module Page.Character exposing (main)
 
+import Browser
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Http
@@ -80,3 +81,13 @@ update msg model =
 
                 Err error ->
                     ( { model | character = Failed }, Cmd.none )
+
+
+main : Program () Model Msg
+main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = always Sub.none
+        }

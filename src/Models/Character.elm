@@ -38,8 +38,12 @@ name (Character data) =
 
 fetch : String -> (Result Http.Error Character -> msg) -> Cmd msg
 fetch characterName msg =
-    Decode.field "character" decoder
-        |> Api.get (Endpoint.character characterName) msg
+    Api.get (Endpoint.character characterName) msg decoder
+
+
+fetchAll : (Result Http.Error (List Character) -> msg) -> Cmd msg
+fetchAll msg =
+    Api.get Endpoint.characters msg (Decode.list decoder)
 
 
 

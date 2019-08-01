@@ -1,4 +1,4 @@
-module Api.Endpoint exposing (Endpoint, character, request)
+module Api.Endpoint exposing (Endpoint, character, characters, request)
 
 import Http
 import Url.Builder exposing (QueryParameter)
@@ -54,3 +54,8 @@ url paths queryParams =
 character : String -> Endpoint
 character name =
     url [ "characters", name ] []
+
+
+characters : Endpoint
+characters =
+    url [ "characters" ] []
