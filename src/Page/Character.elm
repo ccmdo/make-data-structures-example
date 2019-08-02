@@ -1,10 +1,10 @@
 module Page.Character exposing (main)
 
 import Browser
+import Data.Character as Character exposing (Character)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Http
-import Models.Character as Character exposing (Character)
 
 
 

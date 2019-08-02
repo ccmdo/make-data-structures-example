@@ -4,24 +4,15 @@ import Http
 import Url.Builder exposing (QueryParameter)
 
 
-request :
-    { body : Http.Body
-    , expect : Http.Expect a
-    , headers : List Http.Header
-    , method : String
-    , timeout : Maybe Float
-    , url : Endpoint
-    , tracker : Maybe String
-    }
-    -> Cmd a
+request : EndpointRequest a -> Cmd a
 request config =
     Http.request
-        { body = config.body
+        { url = unwrap config.endpoint
         , expect = config.expect
-        , headers = config.headers
         , method = config.method
+        , headers = config.headers
+        , body = config.body
         , timeout = config.timeout
-        , url = unwrap config.url
         , tracker = config.tracker
         }
 
@@ -32,6 +23,21 @@ request config =
 
 type Endpoint
     = Endpoint String
+
+
+type alias EndpointRequest a =
+    { endpoint : Endpoint
+    , expect : Http.Expect a
+    , method : String
+    , headers : List Http.Header
+    , body : Http.Body
+    , timeout : Maybe Float
+    , tracker : Maybe String
+    }
+
+
+
+-- HELPERS
 
 
 unwrap : Endpoint -> String

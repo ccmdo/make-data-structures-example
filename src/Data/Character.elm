@@ -1,4 +1,4 @@
-module Models.Character exposing (Character, fetch, level, name)
+module Data.Character exposing (Character, fetch, level, name)
 
 import Api
 import Api.Endpoint as Endpoint
