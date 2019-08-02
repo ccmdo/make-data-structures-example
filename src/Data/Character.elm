@@ -5,6 +5,7 @@ import Api.Endpoint as Endpoint
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (custom, required)
+import RemoteData exposing (WebData)
 
 
 type Character
@@ -36,12 +37,12 @@ name (Character data) =
 -- API
 
 
-fetch : String -> (Result Http.Error Character -> msg) -> Cmd msg
+fetch : String -> (WebData Character -> msg) -> Cmd msg
 fetch characterName msg =
     Api.get (Endpoint.character characterName) msg decoder
 
 
-fetchAll : (Result Http.Error (List Character) -> msg) -> Cmd msg
+fetchAll : (WebData (List Character) -> msg) -> Cmd msg
 fetchAll msg =
     Api.get Endpoint.characters msg (Decode.list decoder)
 

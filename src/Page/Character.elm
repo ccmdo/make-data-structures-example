@@ -5,6 +5,7 @@ import Data.Character as Character exposing (Character)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Http
+import RemoteData exposing (WebData)
 
 
 
@@ -12,13 +13,7 @@ import Http
 
 
 type alias Model =
-    { character : Status Character }
-
-
-type Status a
-    = Loading
-    | Loaded a
-    | Failed
+    { character : WebData Character }
 
 
 initialCharacterToLoad =
@@ -28,7 +23,7 @@ initialCharacterToLoad =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { character = Loading }
+    ( { character = RemoteData.Loading }
     , Character.fetch initialCharacterToLoad FinishedLoadingCharacter
     )
 
@@ -40,20 +35,24 @@ init () =
 view : Model -> Html Msg
 view model =
     case model.character of
-        Loaded character ->
+        RemoteData.Success character ->
             div
                 [ class "character__container" ]
                 [ viewCharacter character ]
 
-        Loading ->
+        RemoteData.Loading ->
             div
                 [ class "loading" ]
                 [ text "Loading" ]
 
-        Failed ->
+        RemoteData.Failure _ ->
             div
                 [ class "loading--failed" ]
-                [ text "Error loading character" ]
+                [ div [] [ text "Failed to load character" ]
+                ]
+
+        RemoteData.NotAsked ->
+            text ""
 
 
 viewCharacter : Character -> Html Msg
@@ -68,19 +67,14 @@ viewCharacter character =
 
 
 type Msg
-    = FinishedLoadingCharacter (Result Http.Error Character)
+    = FinishedLoadingCharacter (WebData Character)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         FinishedLoadingCharacter response ->
-            case response of
-                Ok character ->
-                    ( { model | character = Loaded character }, Cmd.none )
-
-                Err error ->
-                    ( { model | character = Failed }, Cmd.none )
+            ( { model | character = response }, Cmd.none )
 
 
 main : Program () Model Msg
